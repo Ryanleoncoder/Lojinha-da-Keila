@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>404 · keila.shop</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;min-height:100%}
+body{
+  font-family:-apple-system,'Helvetica Neue',Helvetica,sans-serif;
+  background:#fff;color:#222;
+}
+:root{
+  --p:#ff385c;--ph:#e00b41;
+  --ink:#222;--muted:#6a6a6a;--ms:#929292;
+  --soft:#f7f7f7;--hl:#ddd;
+  --sh:rgba(0,0,0,.02) 0 0 0 1px,rgba(0,0,0,.04) 0 2px 6px,rgba(0,0,0,.08) 0 4px 8px;
+  --sh2:rgba(0,0,0,.04) 0 0 0 1px,rgba(0,0,0,.10) 0 4px 14px,rgba(0,0,0,.14) 0 8px 20px;
+}
+
+/* ── topbar ── */
+.topbar{
+  padding:22px 40px;
+  border-bottom:1px solid var(--hl);
+  display:flex;align-items:center;justify-content:space-between;
+}
+.logo{font-size:20px;font-weight:700;color:var(--p);white-space:nowrap}
+.logo b{color:var(--ink);font-weight:700}
+.topbar-hint{font-size:13px;color:var(--muted)}
+
+/* ── main ── */
+.page{
+  min-height:calc(100vh - 65px);
+  display:grid;grid-template-columns:1fr 1fr;
+}
+
+/* left — illustration */
+.left{
+  background:linear-gradient(135deg,#fff0f5 0%,#f5f0ff 50%,#f0fff8 100%);
+  display:flex;align-items:center;justify-content:center;
+  padding:60px;position:relative;overflow:hidden;
+}
+.four-wrap{
+  position:relative;
+  display:flex;align-items:center;justify-content:center;
+  gap:0;user-select:none;
+}
+.num{
+  font-size:clamp(100px,13vw,180px);
+  font-weight:800;line-height:1;
+  color:#fff;
+  text-shadow:0 4px 32px rgba(255,56,92,.18);
+  letter-spacing:-4px;
+}
+.num.red{color:var(--p)}
+
+/* floating shelf of lost products */
+.shelf{
+  position:absolute;bottom:60px;left:50%;transform:translateX(-50%);
+  display:flex;gap:14px;
+}
+.lost-tile{
+  width:64px;height:64px;border-radius:12px;
+  background:#fff;display:flex;align-items:center;justify-content:center;
+  font-size:28px;box-shadow:var(--sh);
+  animation:float 3s ease-in-out infinite;
+}
+.lost-tile:nth-child(1){animation-delay:0s}
+.lost-tile:nth-child(2){animation-delay:.4s}
+.lost-tile:nth-child(3){animation-delay:.8s}
+.lost-tile:nth-child(4){animation-delay:1.2s}
+.lost-tile:nth-child(5){animation-delay:1.6s}
+@keyframes float{
+  0%,100%{transform:translateY(0)}
+  50%{transform:translateY(-8px)}
+}
+
+/* big emoji in the "0" spot */
+.zero-wrap{position:relative;display:inline-flex;align-items:center;justify-content:center}
+.zero-emoji{
+  font-size:clamp(70px,9vw,120px);
+  animation:spin-slow 8s linear infinite;
+  display:block;line-height:1;
+}
+@keyframes spin-slow{
+  0%{transform:rotate(0deg) scale(1)}
+  50%{transform:rotate(180deg) scale(1.08)}
+  100%{transform:rotate(360deg) scale(1)}
+}
+
+/* right — copy */
+.right{
+  display:flex;align-items:center;justify-content:center;
+  padding:60px;
+}
+.copy{width:100%;max-width:400px}
+
+.badge{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:6px 14px;border-radius:9999px;
+  background:var(--soft);border:1px solid var(--hl);
+  font-size:12px;font-weight:600;color:var(--muted);
+  letter-spacing:.5px;text-transform:uppercase;
+  margin-bottom:24px;
+}
+.badge .dot{
+  width:7px;height:7px;border-radius:50%;background:var(--p);
+  animation:pulse 1.6s ease-in-out infinite;
+}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(.7)}}
+
+.copy h1{
+  font-size:clamp(28px,3vw,38px);font-weight:700;
+  color:var(--ink);line-height:1.25;margin-bottom:14px;
+}
+.copy h1 span{color:var(--p)}
+.copy p{
+  font-size:16px;color:var(--muted);line-height:1.7;margin-bottom:36px;
+}
+
+/* search bar */
+.search-wrap{
+  display:flex;align-items:center;gap:0;
+  border:1px solid var(--hl);border-radius:9999px;
+  overflow:hidden;box-shadow:var(--sh);
+  margin-bottom:16px;
+  background:#fff;
+}
+.search-wrap input{
+  flex:1;border:none;outline:none;
+  padding:14px 20px;font-size:14px;
+  font-family:inherit;color:var(--ink);background:transparent;
+}
+.search-wrap input::placeholder{color:var(--muted)}
+.search-submit{
+  margin:4px;width:44px;height:44px;border-radius:9999px;
+  background:var(--p);border:none;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  font-size:17px;transition:background .18s;flex-shrink:0;
+}
+.search-submit:hover{background:var(--ph)}
+
+/* CTA buttons */
+.ctas{display:flex;gap:10px;flex-wrap:wrap}
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  border-radius:9999px;border:none;
+  font-family:inherit;font-weight:500;cursor:pointer;
+  transition:all .18s;font-size:15px;
+}
+.btn-pri{background:var(--p);color:#fff;padding:13px 28px}
+.btn-pri:hover{background:var(--ph)}
+.btn-sec{
+  background:#fff;color:var(--ink);
+  border:1px solid var(--hl);box-shadow:var(--sh);
+  padding:13px 24px;
+}
+.btn-sec:hover{box-shadow:var(--sh2)}
+
+/* suggestions */
+.sugg-label{
+  font-size:13px;color:var(--ms);margin-top:32px;margin-bottom:12px;
+}
+.sugg-list{display:flex;flex-wrap:wrap;gap:8px}
+.sugg-chip{
+  padding:8px 16px;border-radius:9999px;
+  border:1px solid var(--hl);background:#fff;
+  font-size:13px;color:var(--muted);cursor:pointer;
+  transition:all .15s;font-family:inherit;
+}
+.sugg-chip:hover{border-color:var(--p);color:var(--p);background:#fff5f7}
+
+/* ── responsive ── */
+@media(max-width:760px){
+  .topbar{padding:18px 20px}
+  .page{grid-template-columns:1fr;grid-template-rows:auto 1fr}
+  .left{padding:40px 20px;min-height:280px}
+  .shelf{bottom:30px;gap:10px}
+  .lost-tile{width:50px;height:50px;font-size:22px}
+  .right{padding:40px 24px}
+  .copy h1{font-size:26px}
+  .ctas{flex-direction:column}
+  .btn-pri,.btn-sec{width:100%}
+}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="logo">keila<b>.shop</b></div>
+  <span class="topbar-hint">Produtos artesanais feitos com ♥</span>
+</div>
+
+<div class="page">
+
+  <!-- ── illustration side ── -->
+  <div class="left">
+    <div>
+      <div class="four-wrap">
+        <span class="num red">4</span>
+        <div class="zero-wrap">
+          <span class="zero-emoji">🔍</span>
+        </div>
+        <span class="num red">4</span>
+      </div>
+
+      <div class="shelf">
+        <div class="lost-tile">🕯️</div>
+        <div class="lost-tile">🌸</div>
+        <div class="lost-tile">🍯</div>
+        <div class="lost-tile">🌿</div>
+        <div class="lost-tile">✨</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── copy side ── -->
+  <div class="right">
+    <div class="copy">
+
+      <div class="badge">
+        <span class="dot"></span>
+        Erro 404
+      </div>
+
+      <h1>Ops! Essa página<br/>se perdeu no <span>estoque</span> 😅</h1>
+      <p>
+        Parece que o produto que você procura foi embora ou o link está errado.
+        Mas temos muita coisa linda esperando por você na loja!
+      </p>
+
+      <div class="search-wrap">
+        <input type="text" id="searchInput" placeholder="Buscar produtos artesanais…" onkeydown="onSearchKey(event)"/>
+        <button class="search-submit" onclick="doSearch()">🔍</button>
+      </div>
+
+      <div class="ctas">
+        <button class="btn btn-pri" onclick="goHome()">🏠 Voltar para a loja</button>
+        <button class="btn btn-sec" onclick="goHome()">Ver todos os produtos</button>
+      </div>
+
+      <p class="sugg-label">Você pode estar procurando por…</p>
+      <div class="sugg-list">
+        <button class="sugg-chip" onclick="goHome()">🕯️ Velas</button>
+        <button class="sugg-chip" onclick="goHome()">🌸 Sabonetes</button>
+        <button class="sugg-chip" onclick="goHome()">🍯 Kits</button>
+        <button class="sugg-chip" onclick="goHome()">🌿 Difusores</button>
+        <button class="sugg-chip" onclick="goHome()">✨ Esfoliantes</button>
+        <button class="sugg-chip" onclick="goHome()">🍫 Cremes</button>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+<script>
+function goHome() {
+  window.location.href = "index.html";
+}
+function doSearch() {
+  var q = document.getElementById("searchInput").value.trim();
+  if (q) goHome();
+}
+function onSearchKey(e) {
+  if (e.key === "Enter") doSearch();
+}
+</script>
+</body>
+</html>
