@@ -335,10 +335,4 @@ POST   /api/admin/import-users  - Importar em lote
 
 Propriedade da CR. Uso restrito aos colaboradores.
 
----
-
-## 👥 Contribuidores
-
-Criado por **Keila** com ❤️ para o time de CR.
-
 **Última atualização:** 21 de maio de 2026
