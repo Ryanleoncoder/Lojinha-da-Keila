@@ -1,15 +1,796 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Carteira - Lojinha da Keila</title>
-    <link rel="stylesheet" href="/src/style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Carteira CRCoin · Lojinha da Keila</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ── Airbnb token layer ───────────────────────────────────────────────── */
+:root {
+  --color-rausch-coral: #ff385c;
+  --color-rausch-deep:  #e00b41;
+  --color-carbon:       #222222;
+  --color-slate:        #6a6a6a;
+  --color-silver:       #c1c1c1;
+  --color-pebble:       #dddddd;
+  --color-mist:         #ebebeb;
+  --color-fog:          #f7f7f7;
+  --color-cloud:        #ffffff;
+
+  --radius-cards:      20px;
+  --radius-pills:      32px;
+  --radius-badges:     4px;
+  --radius-inputs:     14px;
+  --radius-buttons:    8px;
+  --radius-searchbar:  20px;
+  --radius-icon:       50%;
+
+  --shadow-subtle:  rgba(0,0,0,.02) 0 0 0 1px, rgba(0,0,0,.04) 0 2px 6px, rgba(0,0,0,.10) 0 4px 8px;
+  --shadow-subtle2: rgba(0,0,0,.02) 0 0 0 1px, rgba(0,0,0,.16) 0 2px 4px;
+
+  --font: 'Inter', ui-sans-serif, system-ui, -apple-system, sans-serif;
+
+  /* CRCoin brand */
+  --cr-gold:      #f59f00;
+  --cr-gold-deep: #e08e00;
+  --cr-gold-soft: #fff9ed;
+  --cr-gold-mid:  #fef3c7;
+}
+
+/* ── Reset ────────────────────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: var(--font);
+  background: var(--color-fog);
+  color: var(--color-carbon);
+  font-size: 14px;
+  line-height: 1.43;
+  letter-spacing: -0.013em;
+  min-height: 100vh;
+}
+button { font-family: inherit; cursor: pointer; }
+a { text-decoration: none; color: inherit; }
+img { display: block; max-width: 100%; }
+
+/* ── Layout ───────────────────────────────────────────────────────────── */
+.page { max-width: 960px; margin: 0 auto; padding: 0 24px 80px; }
+
+/* ── Header ───────────────────────────────────────────────────────────── */
+.header {
+  position: sticky; top: 0; z-index: 100;
+  background: var(--color-cloud);
+  border-bottom: 1px solid var(--color-mist);
+  height: 72px;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 24px;
+  margin: 0 -24px;
+}
+.header-logo {
+  font-size: 18px; font-weight: 700;
+  color: var(--color-rausch-coral);
+  letter-spacing: -0.02em;
+}
+.header-logo span { color: var(--color-carbon); }
+.header-right { display: flex; align-items: center; gap: 12px; }
+.avatar {
+  width: 36px; height: 36px; border-radius: 50%;
+  background: var(--color-rausch-coral);
+  color: var(--color-cloud); font-size: 13px; font-weight: 700;
+  display: flex; align-items: center; justify-content: center;
+}
+.nav-link {
+  font-size: 14px; font-weight: 600; color: var(--color-carbon);
+  padding: 8px 14px; border-radius: var(--radius-buttons);
+  border: none; background: none;
+  transition: background .2s;
+}
+.nav-link:hover { background: var(--color-fog); }
+.nav-link.active {
+  border-bottom: 2px solid var(--color-carbon);
+  border-radius: 0;
+}
+
+/* ── Section heading ──────────────────────────────────────────────────── */
+.section-heading {
+  font-size: 22px; font-weight: 600;
+  letter-spacing: -0.2px; color: var(--color-carbon);
+  margin-bottom: 16px;
+  display: flex; align-items: center; gap: 10px;
+}
+.section-heading svg { flex-shrink: 0; }
+
+/* ── Card surface ─────────────────────────────────────────────────────── */
+.card {
+  background: var(--color-cloud);
+  border-radius: var(--radius-cards);
+  padding: 24px;
+}
+
+/* ── Balance hero ─────────────────────────────────────────────────────── */
+.balance-hero {
+  background: var(--color-carbon);
+  border-radius: var(--radius-cards);
+  padding: 36px 32px;
+  color: var(--color-cloud);
+  position: relative;
+  overflow: hidden;
+  margin-top: 32px;
+}
+.balance-hero::before {
+  content: '';
+  position: absolute; top: -60px; right: -60px;
+  width: 220px; height: 220px; border-radius: 50%;
+  background: rgba(245,159,0,.12);
+}
+.balance-hero::after {
+  content: '';
+  position: absolute; bottom: -80px; left: 40%;
+  width: 160px; height: 160px; border-radius: 50%;
+  background: rgba(255,56,92,.08);
+}
+.balance-label {
+  font-size: 12px; font-weight: 600;
+  letter-spacing: 0.44px; text-transform: uppercase;
+  color: rgba(255,255,255,.55);
+  margin-bottom: 8px;
+  display: flex; align-items: center; gap: 6px;
+}
+.balance-amount {
+  font-size: 52px; font-weight: 700;
+  letter-spacing: -0.02em; line-height: 1.1;
+  margin-bottom: 4px;
+  display: flex; align-items: center; gap: 14px;
+}
+.crcoin-symbol {
+  width: 44px; height: 44px; border-radius: 50%;
+  background: var(--cr-gold);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px; font-weight: 800;
+  color: var(--color-cloud);
+  flex-shrink: 0;
+  box-shadow: 0 2px 12px rgba(245,159,0,.4);
+}
+.balance-usd {
+  font-size: 14px; color: rgba(255,255,255,.5);
+  margin-bottom: 28px;
+}
+.balance-actions { display: flex; gap: 10px; flex-wrap: wrap; position: relative; z-index: 1; }
+.balance-btn {
+  padding: 10px 20px; border-radius: var(--radius-pills);
+  font-size: 14px; font-weight: 600;
+  border: none; display: flex; align-items: center; gap: 7px;
+  transition: all .18s;
+}
+.balance-btn.primary {
+  background: var(--cr-gold); color: var(--color-carbon);
+}
+.balance-btn.primary:hover { background: var(--cr-gold-deep); }
+.balance-btn.ghost {
+  background: rgba(255,255,255,.12); color: var(--color-cloud);
+  border: 1px solid rgba(255,255,255,.18);
+}
+.balance-btn.ghost:hover { background: rgba(255,255,255,.2); }
+
+/* ── Stats row ────────────────────────────────────────────────────────── */
+.stats-row {
+  display: grid; grid-template-columns: repeat(3,1fr); gap: 12px;
+  margin-top: 16px;
+}
+.stat-card {
+  background: var(--color-cloud);
+  border-radius: var(--radius-cards);
+  padding: 18px 20px;
+}
+.stat-label {
+  font-size: 12px; color: var(--color-slate); font-weight: 500;
+  margin-bottom: 6px;
+  display: flex; align-items: center; gap: 5px;
+}
+.stat-value {
+  font-size: 22px; font-weight: 700; color: var(--color-carbon);
+  letter-spacing: -0.18px;
+  display: flex; align-items: center; gap: 6px;
+}
+.stat-value .mini-coin {
+  width: 20px; height: 20px; border-radius: 50%;
+  background: var(--cr-gold); color: var(--color-cloud);
+  font-size: 9px; font-weight: 800;
+  display: flex; align-items: center; justify-content: center;
+}
+.stat-delta {
+  font-size: 12px; font-weight: 500; margin-top: 3px;
+}
+.stat-delta.up   { color: #22c55e; }
+.stat-delta.down { color: var(--color-rausch-coral); }
+
+/* ── Quick actions ────────────────────────────────────────────────────── */
+.quick-actions {
+  display: grid; grid-template-columns: repeat(4,1fr); gap: 10px;
+  margin-top: 16px;
+}
+.qa-btn {
+  background: var(--color-cloud);
+  border: none; border-radius: var(--radius-cards);
+  padding: 20px 12px;
+  display: flex; flex-direction: column; align-items: center; gap: 10px;
+  transition: all .2s; cursor: pointer;
+}
+.qa-btn:hover { transform: translateY(-2px); box-shadow: var(--shadow-subtle); }
+.qa-icon {
+  width: 46px; height: 46px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 20px;
+}
+.qa-label { font-size: 12px; font-weight: 600; color: var(--color-carbon); }
+
+/* ── Transaction list ─────────────────────────────────────────────────── */
+.tx-list { display: flex; flex-direction: column; gap: 0; }
+.tx-item {
+  display: flex; align-items: center; gap: 14px;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--color-mist);
+  background: var(--color-cloud);
+  transition: background .15s; cursor: default;
+}
+.tx-item:first-child { border-radius: var(--radius-cards) var(--radius-cards) 0 0; }
+.tx-item:last-child  { border-bottom: none; border-radius: 0 0 var(--radius-cards) var(--radius-cards); }
+.tx-item:hover { background: var(--color-fog); }
+.tx-icon {
+  width: 44px; height: 44px; border-radius: 50%; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center; font-size: 20px;
+}
+.tx-info { flex: 1; min-width: 0; }
+.tx-title { font-size: 14px; font-weight: 600; color: var(--color-carbon); margin-bottom: 2px; }
+.tx-sub   { font-size: 12px; color: var(--color-slate); }
+.tx-amount { text-align: right; flex-shrink: 0; }
+.tx-val { font-size: 15px; font-weight: 700; display: flex; align-items: center; gap: 4px; }
+.tx-val.credit { color: #22c55e; }
+.tx-val.debit  { color: var(--color-carbon); }
+.tx-date { font-size: 12px; color: var(--color-silver); margin-top: 2px; }
+
+/* ── Badge ────────────────────────────────────────────────────────────── */
+.badge {
+  display: inline-flex; align-items: center; gap: 4px;
+  padding: 3px 9px; border-radius: var(--radius-badges);
+  font-size: 11px; font-weight: 600; letter-spacing: 0.44px;
+}
+.badge.green  { background: #dcfce7; color: #15803d; }
+.badge.amber  { background: var(--cr-gold-mid); color: #92400e; }
+.badge.coral  { background: #ffe4e8; color: var(--color-rausch-deep); }
+.badge.gray   { background: var(--color-fog); color: var(--color-slate); }
+
+/* ── Earn ways ────────────────────────────────────────────────────────── */
+.earn-grid {
+  display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px;
+}
+.earn-card {
+  background: var(--color-cloud);
+  border-radius: var(--radius-cards);
+  padding: 22px;
+  border: 1px solid transparent;
+  transition: all .2s; cursor: pointer;
+}
+.earn-card:hover { border-color: var(--cr-gold); box-shadow: var(--shadow-subtle); transform: translateY(-1px); }
+.earn-icon { font-size: 32px; margin-bottom: 12px; }
+.earn-title { font-size: 15px; font-weight: 600; color: var(--color-carbon); margin-bottom: 4px; }
+.earn-desc  { font-size: 13px; color: var(--color-slate); line-height: 1.5; margin-bottom: 12px; }
+.earn-reward {
+  display: inline-flex; align-items: center; gap: 5px;
+  background: var(--cr-gold-soft);
+  border: 1px solid var(--cr-gold-mid);
+  border-radius: var(--radius-pills);
+  padding: 4px 12px;
+  font-size: 13px; font-weight: 700; color: var(--cr-gold-deep);
+}
+.earn-reward .mini-coin-sm {
+  width: 16px; height: 16px; border-radius: 50%;
+  background: var(--cr-gold); color: var(--color-cloud);
+  font-size: 8px; font-weight: 800;
+  display: flex; align-items: center; justify-content: center;
+}
+
+/* ── Coin info panel ──────────────────────────────────────────────────── */
+.coin-info {
+  background: var(--cr-gold-soft);
+  border: 1px solid var(--cr-gold-mid);
+  border-radius: var(--radius-cards);
+  padding: 24px;
+  display: flex; align-items: flex-start; gap: 18px;
+}
+.coin-big {
+  width: 64px; height: 64px; border-radius: 50%;
+  background: var(--cr-gold);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 26px; font-weight: 800; color: var(--color-cloud);
+  flex-shrink: 0;
+  box-shadow: 0 4px 16px rgba(245,159,0,.35);
+}
+.coin-info-title { font-size: 18px; font-weight: 700; color: var(--color-carbon); margin-bottom: 6px; }
+.coin-info-desc  { font-size: 14px; color: var(--color-slate); line-height: 1.6; margin-bottom: 14px; }
+.conversion-row {
+  display: flex; align-items: center; gap: 8px;
+  font-size: 14px; font-weight: 600; color: var(--color-carbon);
+  background: var(--color-cloud);
+  border-radius: var(--radius-buttons);
+  padding: 10px 14px;
+  width: fit-content;
+}
+
+/* ── Send modal ───────────────────────────────────────────────────────── */
+.modal-overlay {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,.5);
+  z-index: 500;
+  display: flex; align-items: center; justify-content: center;
+  padding: 24px;
+  opacity: 0; pointer-events: none; transition: opacity .2s;
+}
+.modal-overlay.open { opacity: 1; pointer-events: all; }
+.modal {
+  background: var(--color-cloud);
+  border-radius: var(--radius-cards);
+  padding: 28px;
+  width: 100%; max-width: 420px;
+  box-shadow: var(--shadow-subtle);
+  transform: translateY(16px); transition: transform .25s;
+}
+.modal-overlay.open .modal { transform: translateY(0); }
+.modal-header {
+  display: flex; align-items: center; justify-content: space-between; margin-bottom: 22px;
+}
+.modal-title { font-size: 20px; font-weight: 700; letter-spacing: -0.18px; }
+.modal-close {
+  width: 32px; height: 32px; border-radius: 50%;
+  border: 1px solid var(--color-mist); background: var(--color-fog);
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; font-size: 16px; line-height: 1;
+}
+.field { margin-bottom: 16px; }
+.field label { display: block; font-size: 12px; font-weight: 600; color: var(--color-slate); margin-bottom: 6px; }
+.field input {
+  width: 100%; padding: 12px 16px;
+  border: 1px solid var(--color-pebble);
+  border-radius: var(--radius-inputs);
+  font-family: inherit; font-size: 15px; color: var(--color-carbon);
+  background: var(--color-cloud); outline: none;
+  transition: border-color .15s;
+}
+.field input:focus { border-color: var(--color-carbon); }
+.field input::placeholder { color: var(--color-slate); }
+.amount-input-wrap { position: relative; }
+.amount-input-wrap .coin-prefix {
+  position: absolute; left: 14px; top: 50%; transform: translateY(-50%);
+  width: 22px; height: 22px; border-radius: 50%;
+  background: var(--cr-gold); color: var(--color-cloud);
+  font-size: 10px; font-weight: 800;
+  display: flex; align-items: center; justify-content: center;
+}
+.amount-input-wrap input { padding-left: 44px; }
+.modal-cta {
+  width: 100%; padding: 14px;
+  background: var(--color-carbon); color: var(--color-cloud);
+  border: none; border-radius: var(--radius-buttons);
+  font-size: 15px; font-weight: 600; cursor: pointer;
+  transition: background .18s; margin-top: 8px;
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+}
+.modal-cta:hover { background: #333; }
+.modal-note {
+  font-size: 12px; color: var(--color-slate);
+  text-align: center; margin-top: 12px; line-height: 1.5;
+}
+
+/* ── Toast ────────────────────────────────────────────────────────────── */
+.toast {
+  position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%) translateY(80px);
+  background: var(--color-carbon); color: var(--color-cloud);
+  padding: 12px 24px; border-radius: var(--radius-pills);
+  font-size: 14px; font-weight: 500;
+  box-shadow: var(--shadow-subtle);
+  z-index: 999; transition: transform .3s cubic-bezier(.22,1,.36,1);
+  white-space: nowrap;
+}
+.toast.show { transform: translateX(-50%) translateY(0); }
+
+/* ── Tabs ─────────────────────────────────────────────────────────────── */
+.tab-bar {
+  display: flex; gap: 4px;
+  background: var(--color-cloud); padding: 6px;
+  border-radius: var(--radius-pills);
+  margin-bottom: 16px; width: fit-content;
+}
+.tab {
+  padding: 8px 18px; border-radius: var(--radius-pills);
+  font-size: 13px; font-weight: 600;
+  border: none; background: none; cursor: pointer;
+  color: var(--color-slate); transition: all .18s;
+}
+.tab.active { background: var(--color-carbon); color: var(--color-cloud); }
+
+/* ── Utilities ────────────────────────────────────────────────────────── */
+.mt8  { margin-top: 8px;  }
+.mt16 { margin-top: 16px; }
+.mt32 { margin-top: 32px; }
+.mt48 { margin-top: 48px; }
+.gap-section { margin-top: 48px; }
+
+/* ── Receive card ─────────────────────────────────────────────────────── */
+.receive-card {
+  background: var(--color-cloud);
+  border-radius: var(--radius-cards);
+  padding: 24px; text-align: center;
+}
+.qr-placeholder {
+  width: 148px; height: 148px; margin: 0 auto 16px;
+  background: var(--color-fog);
+  border: 1px solid var(--color-mist);
+  border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+  flex-direction: column; gap: 8px;
+}
+.qr-placeholder svg { opacity: .25; }
+.wallet-address {
+  font-family: monospace; font-size: 13px;
+  color: var(--color-slate); background: var(--color-fog);
+  border-radius: var(--radius-buttons);
+  padding: 8px 14px; margin: 0 auto;
+  display: inline-block; max-width: 280px;
+  word-break: break-all;
+}
+.copy-btn {
+  margin-top: 12px; padding: 10px 22px;
+  border-radius: var(--radius-pills);
+  border: 1px solid var(--color-pebble);
+  background: var(--color-cloud); color: var(--color-carbon);
+  font-size: 13px; font-weight: 600; cursor: pointer;
+  transition: background .18s;
+}
+.copy-btn:hover { background: var(--color-fog); }
+
+/* ── Scrollbar hide ───────────────────────────────────────────────────── */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--color-pebble); border-radius: 3px; }
+</style>
 </head>
 <body>
-    <div id="carteira-container"></div>
-    <script src="/src/js/supabase.js"></script>
-    <script src="/src/js/auth.js"></script>
-    <script src="/src/js/utils.js"></script>
+
+<!-- ── HEADER ──────────────────────────────────────────────────────────── -->
+<header class="header">
+  <div class="header-logo">keila<span>.shop</span></div>
+  <nav style="display:flex;gap:4px;">
+    <button class="nav-link" onclick="location.href='/'">Loja</button>
+    <button class="nav-link active">Carteira</button>
+    <button class="nav-link">Histórico</button>
+  </nav>
+  <div class="header-right">
+    <div class="avatar">MS</div>
+  </div>
+</header>
+
+<!-- ── PAGE ────────────────────────────────────────────────────────────── -->
+<div class="page">
+
+  <!-- ── BALANCE HERO ────────────────────────────────────────────────── -->
+  <div class="balance-hero">
+    <div class="balance-label">
+      <svg width="14" height="14" fill="none" stroke="rgba(255,255,255,.55)" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="3"/><path d="M2 10h20"/></svg>
+      Saldo disponível
+    </div>
+    <div class="balance-amount">
+      <div class="crcoin-symbol">CR</div>
+      <span id="balance-display">1.250</span>
+    </div>
+    <div class="balance-usd">≈ R$ 125,00 de poder de compra</div>
+    <div class="balance-actions">
+      <button class="balance-btn primary" onclick="openModal('send')">
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M22 2 11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg>
+        Enviar
+      </button>
+      <button class="balance-btn ghost" onclick="openModal('receive')">
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+        Receber
+      </button>
+      <button class="balance-btn ghost" onclick="openModal('history')">
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+        Extrato
+      </button>
+    </div>
+  </div>
+
+  <!-- ── STATS ROW ───────────────────────────────────────────────────── -->
+  <div class="stats-row">
+    <div class="stat-card">
+      <div class="stat-label">
+        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+        Ganhos (mês)
+      </div>
+      <div class="stat-value">
+        <div class="mini-coin">CR</div>
+        380
+      </div>
+      <div class="stat-delta up">↑ +12% vs mês anterior</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">
+        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+        Gastos (mês)
+      </div>
+      <div class="stat-value">
+        <div class="mini-coin">CR</div>
+        890
+      </div>
+      <div class="stat-delta down">↓ 5 compras</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">
+        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        Amigos ativos
+      </div>
+      <div class="stat-value">7</div>
+      <div class="stat-delta up">↑ +2 esta semana</div>
+    </div>
+  </div>
+
+  <!-- ── QUICK ACTIONS ───────────────────────────────────────────────── -->
+  <div class="gap-section">
+    <div class="section-heading">Ações rápidas</div>
+    <div class="quick-actions">
+      <button class="qa-btn" onclick="openModal('send')">
+        <div class="qa-icon" style="background:#fff9ed;">
+          <svg width="22" height="22" fill="none" stroke="#f59f00" stroke-width="2.2" viewBox="0 0 24 24"><path d="M22 2 11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg>
+        </div>
+        <span class="qa-label">Enviar</span>
+      </button>
+      <button class="qa-btn" onclick="openModal('receive')">
+        <div class="qa-icon" style="background:#f0fdf4;">
+          <svg width="22" height="22" fill="none" stroke="#22c55e" stroke-width="2.2" viewBox="0 0 24 24"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+        </div>
+        <span class="qa-label">Receber</span>
+      </button>
+      <button class="qa-btn" onclick="showSection('earn')">
+        <div class="qa-icon" style="background:#ffe4e8;">
+          <svg width="22" height="22" fill="none" stroke="#ff385c" stroke-width="2.2" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+        </div>
+        <span class="qa-label">Ganhar mais</span>
+      </button>
+      <button class="qa-btn" onclick="showSection('history')">
+        <div class="qa-icon" style="background:#f0f4ff;">
+          <svg width="22" height="22" fill="none" stroke="#6366f1" stroke-width="2.2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+        </div>
+        <span class="qa-label">Histórico</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- ── RECENT TRANSACTIONS ─────────────────────────────────────────── -->
+  <div class="gap-section" id="section-history">
+    <div class="section-heading">
+      Transações recentes
+      <span class="badge green">ao vivo</span>
+    </div>
+
+    <div class="tab-bar">
+      <button class="tab active" onclick="filterTx('all',this)">Todas</button>
+      <button class="tab" onclick="filterTx('credit',this)">Entradas</button>
+      <button class="tab" onclick="filterTx('debit',this)">Saídas</button>
+    </div>
+
+    <div class="tx-list" id="tx-list"></div>
+  </div>
+
+  <!-- ── EARN WAYS ────────────────────────────────────────────────────── -->
+  <div class="gap-section" id="section-earn">
+    <div class="section-heading">Como ganhar CRCoins</div>
+    <div class="earn-grid">
+      <div class="earn-card">
+        <div class="earn-icon">🛍️</div>
+        <div class="earn-title">Faça compras na loja</div>
+        <div class="earn-desc">Ganhe CRCoins em cada produto que você comprar. Quanto mais você compra, mais acumula.</div>
+        <div class="earn-reward"><div class="mini-coin-sm">CR</div> +10 por compra</div>
+      </div>
+      <div class="earn-card">
+        <div class="earn-icon">⭐</div>
+        <div class="earn-title">Avalie seus pedidos</div>
+        <div class="earn-desc">Escreva uma avaliação honesta dos produtos que você recebeu e ganhe moedas extras.</div>
+        <div class="earn-reward"><div class="mini-coin-sm">CR</div> +25 por avaliação</div>
+      </div>
+      <div class="earn-card">
+        <div class="earn-icon">👥</div>
+        <div class="earn-title">Indique amigos</div>
+        <div class="earn-desc">Compartilhe seu código de indicação. Quando seu amigo fizer a primeira compra, você ganha!</div>
+        <div class="earn-reward"><div class="mini-coin-sm">CR</div> +100 por indicação</div>
+      </div>
+      <div class="earn-card">
+        <div class="earn-icon">🎂</div>
+        <div class="earn-title">Aniversário da conta</div>
+        <div class="earn-desc">Todo ano, no mês do seu aniversário de cliente, você recebe um presente especial em CRCoins.</div>
+        <div class="earn-reward"><div class="mini-coin-sm">CR</div> +200 por ano</div>
+      </div>
+    </div>
+
+    <!-- Refer code -->
+    <div class="card mt16" style="display:flex;align-items:center;gap:20px;flex-wrap:wrap;">
+      <div style="flex:1;min-width:200px;">
+        <div style="font-size:15px;font-weight:700;color:var(--color-carbon);margin-bottom:4px;">Seu código de indicação</div>
+        <div style="font-size:13px;color:var(--color-slate);">Compartilhe com amigos e ganhe 100 CRCoins para cada indicação convertida.</div>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px;">
+        <div style="font-family:monospace;font-size:18px;font-weight:700;letter-spacing:3px;color:var(--color-carbon);background:var(--color-fog);padding:10px 18px;border-radius:var(--radius-buttons);">KEILA2026</div>
+        <button class="copy-btn" onclick="copyCode()">Copiar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── COIN INFO ─────────────────────────────────────────────────────── -->
+  <div class="gap-section">
+    <div class="section-heading">O que é CRCoin?</div>
+    <div class="coin-info">
+      <div class="coin-big">CR</div>
+      <div>
+        <div class="coin-info-title">CRCoin — a moeda da Keila</div>
+        <div class="coin-info-desc">
+          CRCoin é a moeda virtual exclusiva da Lojinha da Keila. Você acumula CRCoins fazendo compras, avaliando produtos e indicando amigos — e usa para descontos nas próximas compras. Não é criptomoeda, não tem valor financeiro externo: é um programa de fidelidade que recompensa quem ama a loja.
+        </div>
+        <div class="conversion-row">
+          <div class="mini-coin-sm" style="width:22px;height:22px;font-size:10px;border-radius:50%;background:var(--cr-gold);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;">CR</div>
+          100 CRCoins = R$ 10,00 de desconto
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /page -->
+
+<!-- ── MODAL: SEND ──────────────────────────────────────────────────────── -->
+<div class="modal-overlay" id="modal-send">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">Enviar CRCoins</div>
+      <button class="modal-close" onclick="closeModal('send')">✕</button>
+    </div>
+    <div class="field">
+      <label>Para (usuário ou e-mail)</label>
+      <input type="text" placeholder="ex: ana@email.com ou @ana">
+    </div>
+    <div class="field">
+      <label>Quantidade</label>
+      <div class="amount-input-wrap">
+        <div class="coin-prefix">CR</div>
+        <input type="number" placeholder="0" min="1" max="1250" id="send-amount">
+      </div>
+    </div>
+    <div class="field">
+      <label>Mensagem (opcional)</label>
+      <input type="text" placeholder="ex: presente de aniversário 🎉">
+    </div>
+    <div style="background:var(--color-fog);border-radius:var(--radius-buttons);padding:12px 14px;margin-bottom:4px;font-size:13px;color:var(--color-slate);">
+      Saldo disponível: <strong style="color:var(--color-carbon);">CR 1.250</strong> &nbsp;·&nbsp; Sem taxas de envio
+    </div>
+    <button class="modal-cta" onclick="doSend()">
+      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M22 2 11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg>
+      Confirmar envio
+    </button>
+    <div class="modal-note">Transferências entre usuários são instantâneas e gratuitas.</div>
+  </div>
+</div>
+
+<!-- ── MODAL: RECEIVE ───────────────────────────────────────────────────── -->
+<div class="modal-overlay" id="modal-receive">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">Receber CRCoins</div>
+      <button class="modal-close" onclick="closeModal('receive')">✕</button>
+    </div>
+    <div class="receive-card" style="border-radius:var(--radius-buttons);padding:20px;">
+      <div class="qr-placeholder">
+        <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/>
+          <rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="3" height="3"/>
+          <rect x="18" y="14" width="3" height="3"/><rect x="14" y="18" width="3" height="3"/>
+          <rect x="18" y="18" width="3" height="3"/>
+        </svg>
+        <div style="font-size:10px;color:var(--color-slate);">QR Code</div>
+      </div>
+      <div style="font-size:13px;color:var(--color-slate);margin-bottom:8px;">Seu endereço de carteira</div>
+      <div class="wallet-address">@mariasilva · KL-2026-MSIL-9984</div>
+      <button class="copy-btn" onclick="copyWallet()">📋 Copiar endereço</button>
+    </div>
+    <div class="modal-note mt16">Compartilhe seu endereço ou QR code para receber CRCoins de qualquer usuário da loja.</div>
+  </div>
+</div>
+
+<!-- ── TOAST ─────────────────────────────────────────────────────────── -->
+<div class="toast" id="toast"></div>
+
+<script>
+/* ── Transaction data ───────────────────────────────────────────────── */
+const TXS = [
+  { id:1,  type:'debit',  icon:'🛍️', bg:'#fff9ed', title:'Compra: Kit Hidratação com Mel',  sub:'Lojinha da Keila',          amount:-89,  date:'Hoje, 14:32' },
+  { id:2,  type:'credit', icon:'⭐', bg:'#f0fdf4', title:'Bônus por avaliação',              sub:'Esfoliante de Açúcar',      amount:+25,  date:'Hoje, 10:05' },
+  { id:3,  type:'credit', icon:'👥', bg:'#f0fdf4', title:'Indicação convertida',             sub:'Ana Costa fez a 1ª compra', amount:+100, date:'Ontem, 19:41' },
+  { id:4,  type:'debit',  icon:'🛍️', bg:'#fff9ed', title:'Compra: Vela Aromática Lavanda',  sub:'Lojinha da Keila',          amount:-45,  date:'Ontem, 11:20' },
+  { id:5,  type:'credit', icon:'📥', bg:'#f0f4ff', title:'Recebido de @joaop',               sub:'Presente de aniversário 🎉', amount:+200, date:'22 mai, 09:15' },
+  { id:6,  type:'debit',  icon:'🛍️', bg:'#fff9ed', title:'Compra: Sabonete Artesanal Rosa', sub:'Lojinha da Keila',          amount:-28,  date:'20 mai, 16:44' },
+  { id:7,  type:'credit', icon:'⭐', bg:'#f0fdf4', title:'Bônus por avaliação',              sub:'Vela Aromática Lavanda',    amount:+25,  date:'20 mai, 09:01' },
+  { id:8,  type:'credit', icon:'🎂', bg:'#fff9ed', title:'Bônus de aniversário de conta',    sub:'1 ano como cliente',        amount:+200, date:'15 mai, 00:00' },
+  { id:9,  type:'debit',  icon:'📤', bg:'#ffe4e8', title:'Enviado para @carol',              sub:'Presente',                  amount:-50,  date:'12 mai, 17:33' },
+  { id:10, type:'credit', icon:'🛍️', bg:'#f0fdf4', title:'Cashback: Creme Corporal Cacau',  sub:'10% de volta em CRCoins',   amount:+5,   date:'10 mai, 14:22' },
+];
+
+let activeTxFilter = 'all';
+
+function renderTxList(filter) {
+  const list = document.getElementById('tx-list');
+  const items = filter === 'all' ? TXS : TXS.filter(t => t.type === filter);
+  list.innerHTML = items.map((tx, i) => `
+    <div class="tx-item" style="${i===0?'border-radius:var(--radius-cards) var(--radius-cards) 0 0;':''}${i===items.length-1?'border-bottom:none;border-radius:0 0 var(--radius-cards) var(--radius-cards);':''}">
+      <div class="tx-icon" style="background:${tx.bg};">${tx.icon}</div>
+      <div class="tx-info">
+        <div class="tx-title">${tx.title}</div>
+        <div class="tx-sub">${tx.sub}</div>
+      </div>
+      <div class="tx-amount">
+        <div class="tx-val ${tx.type === 'credit' ? 'credit' : 'debit'}">
+          <span style="width:14px;height:14px;border-radius:50%;background:var(--cr-gold);color:#fff;font-size:7px;font-weight:800;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;">CR</span>
+          ${tx.amount > 0 ? '+' : ''}${Math.abs(tx.amount)}
+        </div>
+        <div class="tx-date">${tx.date}</div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function filterTx(type, btn) {
+  activeTxFilter = type;
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  btn.classList.add('active');
+  renderTxList(type);
+}
+
+renderTxList('all');
+
+/* ── Modal ──────────────────────────────────────────────────────────── */
+function openModal(id) {
+  if (id === 'history') { showSection('history'); return; }
+  document.getElementById('modal-' + id).classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeModal(id) {
+  document.getElementById('modal-' + id).classList.remove('open');
+  document.body.style.overflow = '';
+}
+document.querySelectorAll('.modal-overlay').forEach(o => {
+  o.addEventListener('click', e => { if (e.target === o) o.classList.remove('open'), document.body.style.overflow = ''; });
+});
+
+/* ── Send ───────────────────────────────────────────────────────────── */
+function doSend() {
+  const amt = parseInt(document.getElementById('send-amount').value) || 0;
+  if (amt < 1)   { showToast('⚠️ Informe uma quantidade válida'); return; }
+  if (amt > 1250){ showToast('⚠️ Saldo insuficiente'); return; }
+  closeModal('send');
+  showToast('✅ CRCoins enviados com sucesso!');
+}
+
+/* ── Toast ──────────────────────────────────────────────────────────── */
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+/* ── Copy ───────────────────────────────────────────────────────────── */
+function copyCode()   { navigator.clipboard?.writeText('KEILA2026'); showToast('📋 Código copiado!'); }
+function copyWallet() { navigator.clipboard?.writeText('@mariasilva · KL-2026-MSIL-9984'); showToast('📋 Endereço copiado!'); }
+
+/* ── Section scroll ─────────────────────────────────────────────────── */
+function showSection(id) {
+  const el = document.getElementById('section-' + id);
+  if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+</script>
 </body>
 </html>
