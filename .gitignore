@@ -1,0 +1,63 @@
+# Variáveis de ambiente
+.env
+.env.local
+.env.*.local
+
+# Node.js
+node_modules/
+npm-debug.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+package-lock.json
+yarn.lock
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# Build e outputs
+dist/
+build/
+.next/
+out/
+
+# Logs
+logs/
+*.log
+
+# Cache
+.cache/
+.eslintcache
+
+# Supabase
+supabase/.branches/
+supabase/.temp/
+
+# Sistema operacional
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+
+# Arquivos temporários
+*.tmp
+*.temp
+*.bak
+*.swp
+
+# Variáveis sensíveis
+.env.production
+.env.development
+.env.test
+
+# Arquivos locais não rastreados
+local.json
+config.local.js
