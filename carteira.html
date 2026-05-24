@@ -1,15 +1,467 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Carteira - Lojinha da Keila</title>
-    <link rel="stylesheet" href="/src/style.css">
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Carteira · keila.shop</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{min-height:100%}
+body{font-family:-apple-system,'Helvetica Neue',Helvetica,sans-serif;background:#f7f7f7;color:#222}
+:root{
+  --p:#ff385c;--ph:#e00b41;
+  --ink:#222;--body:#3f3f3f;--muted:#6a6a6a;--ms:#929292;
+  --cv:#fff;--soft:#f7f7f7;--hl:#ddd;
+  --crc:#f5a623;--crch:#e8920a;--crc-bg:#fff8ed;
+  --sh:rgba(0,0,0,.02) 0 0 0 1px,rgba(0,0,0,.04) 0 2px 6px,rgba(0,0,0,.08) 0 4px 8px;
+  --sh2:rgba(0,0,0,.04) 0 0 0 1px,rgba(0,0,0,.10) 0 4px 14px,rgba(0,0,0,.14) 0 8px 20px;
+}
+button{font-family:inherit;cursor:pointer}
+
+/* topbar */
+.topbar{padding:0 40px;height:72px;background:#fff;border-bottom:1px solid var(--hl);
+  display:flex;align-items:center;justify-content:space-between;
+  box-shadow:var(--sh);position:sticky;top:0;z-index:100}
+.logo{font-size:20px;font-weight:700;color:var(--p)}
+.logo b{color:var(--ink);font-weight:700}
+.topbar-nav{display:flex;gap:24px;align-items:center}
+.nav-link{font-size:14px;color:var(--muted);font-weight:500;cursor:pointer;
+  padding:4px 0;border-bottom:2px solid transparent;transition:all .15s}
+.nav-link:hover{color:var(--ink)}
+.nav-link.on{color:var(--ink);border-bottom-color:var(--p)}
+.topbar-r{display:flex;align-items:center;gap:12px}
+.crc-pill{display:flex;align-items:center;gap:6px;padding:8px 14px;border-radius:9999px;
+  background:var(--crc-bg);border:1px solid #f5d9a0}
+.crc-pill span{font-size:13px;font-weight:700;color:#b36a00}
+.avatar{width:36px;height:36px;border-radius:50%;background:var(--p);
+  color:#fff;display:flex;align-items:center;justify-content:center;
+  font-size:13px;font-weight:700}
+
+/* layout */
+.page{max-width:1060px;margin:0 auto;padding:36px 32px;
+  display:grid;grid-template-columns:1fr 320px;gap:24px;align-items:start}
+.col-l{display:flex;flex-direction:column;gap:20px}
+.col-r{display:flex;flex-direction:column;gap:20px;position:sticky;top:92px}
+.card{background:#fff;border-radius:16px;border:1px solid var(--hl);
+  padding:24px;box-shadow:var(--sh)}
+.stitle{font-size:16px;font-weight:700;color:var(--ink);margin-bottom:16px;
+  display:flex;align-items:center;justify-content:space-between}
+.stitle a{font-size:13px;font-weight:500;color:var(--p);cursor:pointer}
+
+/* balance card */
+.wallet-card{border-radius:20px;padding:28px;color:#fff;border:none;
+  background:linear-gradient(135deg,#f5a623 0%,#e8650a 100%);
+  box-shadow:rgba(245,166,35,.4) 0 10px 30px;
+  position:relative;overflow:hidden}
+.wc-blob1{position:absolute;top:-50px;right:-50px;width:200px;height:200px;
+  border-radius:50%;background:rgba(255,255,255,.1);pointer-events:none}
+.wc-blob2{position:absolute;bottom:-70px;right:80px;width:160px;height:160px;
+  border-radius:50%;background:rgba(255,255,255,.07);pointer-events:none}
+.wc-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:26px;position:relative}
+.wc-brand{display:flex;align-items:center;gap:8px}
+.wc-brand .coin-big{font-size:26px}
+.wc-brand-name{font-size:16px;font-weight:700;letter-spacing:.3px}
+.wc-brand-sub{font-size:11px;opacity:.75;text-transform:uppercase;letter-spacing:1px}
+.wc-user{font-size:13px;opacity:.8;font-weight:500}
+.wc-label{font-size:12px;opacity:.75;text-transform:uppercase;letter-spacing:.8px;margin-bottom:6px}
+.wc-amount{display:flex;align-items:baseline;gap:6px;
+  font-size:52px;font-weight:800;line-height:1;letter-spacing:-2px}
+.wc-amount .curr{font-size:26px}
+.wc-amount .dec{font-size:26px;font-weight:600;opacity:.85}
+.wc-bottom{display:flex;gap:28px;margin-top:24px;padding-top:20px;
+  border-top:1px solid rgba(255,255,255,.2);position:relative}
+.wc-stat label{font-size:10px;opacity:.65;text-transform:uppercase;
+  letter-spacing:.8px;display:block;margin-bottom:3px}
+.wc-stat p{font-size:14px;font-weight:700}
+.wc-level{margin-left:auto;align-self:flex-end;padding:6px 14px;border-radius:9999px;
+  background:rgba(255,255,255,.2);font-size:12px;font-weight:700;
+  display:flex;align-items:center;gap:5px}
+
+/* quick actions */
+.actions{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.act{display:flex;flex-direction:column;align-items:center;gap:8px;
+  padding:18px 8px;border-radius:14px;border:1px solid var(--hl);
+  background:#fff;cursor:pointer;transition:all .18s;box-shadow:var(--sh)}
+.act:hover{box-shadow:var(--sh2);transform:translateY(-2px)}
+.act-ico{width:46px;height:46px;border-radius:12px;
+  display:flex;align-items:center;justify-content:center;font-size:22px}
+.act-lbl{font-size:12px;font-weight:600;color:var(--ink);text-align:center}
+
+/* how to earn */
+.earn-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.earn-item{border-radius:12px;padding:16px;border:1px solid var(--hl)}
+.earn-header{display:flex;align-items:center;gap:10px;margin-bottom:6px}
+.earn-icon{font-size:22px}
+.earn-name{font-size:13px;font-weight:700;color:var(--ink)}
+.earn-desc{font-size:12px;color:var(--muted);line-height:1.5}
+.earn-rate{display:inline-flex;align-items:center;gap:5px;margin-top:8px;
+  padding:4px 10px;border-radius:9999px;background:var(--crc-bg);
+  font-size:12px;font-weight:700;color:#b36a00}
+
+/* transactions */
+.tx-filters{display:flex;gap:8px;margin-bottom:16px;overflow-x:auto}
+.tx-filters::-webkit-scrollbar{height:0}
+.tf{padding:7px 16px;border-radius:9999px;border:1px solid var(--hl);
+  background:#fff;font-size:13px;font-weight:500;color:var(--muted);
+  cursor:pointer;white-space:nowrap;transition:all .15s}
+.tf.on{background:var(--ink);border-color:var(--ink);color:#fff}
+.tx-list{display:flex;flex-direction:column}
+.tx{display:flex;align-items:center;gap:12px;padding:14px 0;
+  border-bottom:1px solid var(--soft);cursor:pointer;
+  border-radius:0;transition:all .12s}
+.tx:last-child{border-bottom:none}
+.tx:hover{background:var(--soft);margin:0 -24px;padding-left:24px;padding-right:24px;border-radius:10px}
+.tx-ico{width:44px;height:44px;border-radius:12px;
+  display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+.tx-info{flex:1;min-width:0}
+.tx-name{font-size:14px;font-weight:600;color:var(--ink);margin-bottom:2px;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tx-sub{font-size:12px;color:var(--muted)}
+.tx-r{text-align:right;flex-shrink:0}
+.tx-amt{font-size:14px;font-weight:700;display:flex;align-items:center;
+  gap:4px;justify-content:flex-end;white-space:nowrap}
+.tx-amt.earn{color:#c07500}
+.tx-amt.spend{color:var(--ink)}
+.tx-status{font-size:11px;font-weight:600;padding:2px 8px;
+  border-radius:9999px;display:inline-block;margin-top:3px}
+.st-ok{background:#eafaf1;color:#1a7a45}
+.st-pend{background:#fff8e6;color:#b36200}
+.load-more{width:100%;margin-top:14px;padding:12px;border-radius:9999px;
+  border:1px solid var(--hl);background:#fff;font-size:14px;
+  font-weight:500;color:var(--muted);transition:all .15s;box-shadow:var(--sh)}
+.load-more:hover{color:var(--ink);box-shadow:var(--sh2)}
+
+/* level card */
+.level-row{display:flex;align-items:center;gap:16px;margin-bottom:14px}
+.level-info .lname{font-size:16px;font-weight:700;color:var(--ink)}
+.level-info .lsub{font-size:12px;color:var(--muted);margin-top:3px;line-height:1.4}
+.prog-track{height:8px;border-radius:9999px;background:var(--soft);overflow:hidden;margin:12px 0 6px}
+.prog-fill{height:100%;border-radius:9999px;
+  background:linear-gradient(90deg,var(--crc),var(--p));
+  transition:width .8s cubic-bezier(.4,0,.2,1)}
+.prog-labels{display:flex;justify-content:space-between;font-size:11px;color:var(--muted)}
+.lvl-rows{display:flex;flex-direction:column;gap:8px;margin-top:14px}
+.lvl-row{display:flex;justify-content:space-between;font-size:13px;color:var(--muted)}
+
+/* referral */
+.ref-box{background:linear-gradient(135deg,#fff8ed,#fff0f2);
+  border-radius:14px;border:1px solid #f5d9a0;padding:18px}
+.ref-box h4{font-size:14px;font-weight:700;color:var(--ink);margin-bottom:6px}
+.ref-box p{font-size:12px;color:var(--muted);line-height:1.5;margin-bottom:12px}
+.ref-row{display:flex;align-items:center;gap:8px}
+.ref-code{flex:1;padding:10px 14px;border-radius:9999px;border:1px solid #f5d9a0;
+  background:#fff;font-size:13px;font-weight:700;color:var(--ink);
+  letter-spacing:1px;text-align:center}
+.ref-copy{padding:10px 16px;border-radius:9999px;border:none;
+  background:var(--p);color:#fff;font-size:13px;font-weight:600;
+  transition:background .15s}
+.ref-copy:hover{background:var(--ph)}
+.ref-reward{display:flex;align-items:center;gap:6px;margin-top:10px;
+  font-size:12px;color:#b36a00;font-weight:600}
+
+/* modal */
+.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:300;
+  display:none;align-items:center;justify-content:center;padding:20px}
+.modal-bg.on{display:flex}
+.modal{background:#fff;border-radius:20px;padding:28px;
+  width:100%;max-width:380px;box-shadow:rgba(0,0,0,.2) 0 20px 60px}
+.modal-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px}
+.modal-head h3{font-size:18px;font-weight:700;color:var(--ink)}
+.modal-close{width:32px;height:32px;border-radius:50%;
+  border:1px solid var(--hl);background:var(--soft);font-size:14px;
+  display:flex;align-items:center;justify-content:center;cursor:pointer}
+.modal-body{text-align:center}
+.modal-coin{font-size:64px;margin-bottom:12px;
+  animation:pulse-c 1.5s ease-in-out infinite}
+@keyframes pulse-c{0%,100%{transform:scale(1)}50%{transform:scale(1.08)}}
+.modal-amt{font-size:36px;font-weight:800;color:var(--ink);margin-bottom:6px;
+  display:flex;align-items:baseline;justify-content:center;gap:6px}
+.modal-amt .unit{font-size:18px;font-weight:600;color:var(--muted)}
+.modal-note{font-size:13px;color:var(--muted);line-height:1.6;margin-bottom:22px}
+.btn-full-pri{display:flex;align-items:center;justify-content:center;gap:8px;
+  width:100%;padding:14px;border-radius:9999px;border:none;
+  background:var(--p);color:#fff;font-size:15px;font-weight:600;
+  cursor:pointer;transition:background .15s}
+.btn-full-pri:hover{background:var(--ph)}
+.btn-full-sec{display:flex;align-items:center;justify-content:center;
+  width:100%;padding:12px;border-radius:9999px;border:1px solid var(--hl);
+  background:#fff;color:var(--ink);font-size:14px;font-weight:500;
+  cursor:pointer;margin-top:10px;transition:all .15s}
+.btn-full-sec:hover{box-shadow:var(--sh)}
+
+@media(max-width:780px){
+  .topbar{padding:0 20px}
+  .page{grid-template-columns:1fr;padding:20px 16px}
+  .col-r{position:static}
+  .earn-grid{grid-template-columns:1fr}
+}
+</style>
 </head>
 <body>
-    <div id="carteira-container"></div>
-    <script src="/src/js/supabase.js"></script>
-    <script src="/src/js/auth.js"></script>
-    <script src="/src/js/utils.js"></script>
+
+<div class="topbar">
+  <div class="logo">keila<b>.shop</b></div>
+  <nav class="topbar-nav">
+    <span class="nav-link" onclick="location.href='lojinha-keila.html'">Loja</span>
+    <span class="nav-link on">Carteira</span>
+    <span class="nav-link">Pedidos</span>
+    <span class="nav-link">Favoritos</span>
+  </nav>
+  <div class="topbar-r">
+    <div class="crc-pill">
+      <span style="font-size:16px">🟡</span>
+      <span id="navCRC">1.240</span>
+      <span> CRC</span>
+    </div>
+    <div class="avatar">MS</div>
+  </div>
+</div>
+
+<div class="page">
+
+  <!-- ═══ LEFT ═══ -->
+  <div class="col-l">
+
+    <!-- balance card -->
+    <div class="wallet-card">
+      <div class="wc-blob1"></div>
+      <div class="wc-blob2"></div>
+      <div class="wc-top">
+        <div class="wc-brand">
+          <span class="coin-big">🟡</span>
+          <div>
+            <div class="wc-brand-name">CRCoins</div>
+            <div class="wc-brand-sub">keila.shop wallet</div>
+          </div>
+        </div>
+        <div class="wc-user">Maria Silva</div>
+      </div>
+      <div class="wc-label">Saldo disponível</div>
+      <div class="wc-amount">
+        <span class="curr">🟡</span>
+        <span id="saldoCRC">1.240</span>
+        <span class="dec">,50 CRC</span>
+      </div>
+      <div class="wc-bottom">
+        <div class="wc-stat">
+          <label>Total ganho</label>
+          <p>🟡 3.810 CRC</p>
+        </div>
+        <div class="wc-stat">
+          <label>Total gasto</label>
+          <p>🟡 2.569 CRC</p>
+        </div>
+        <div class="wc-level">✨ Nível Ouro</div>
+      </div>
+    </div>
+
+    <!-- actions -->
+    <div class="card" style="padding:20px">
+      <div class="actions">
+        <button class="act" onclick="openModal()">
+          <div class="act-ico" style="background:#fff0f2">💸</div>
+          <div class="act-lbl">Gastar CRC</div>
+        </button>
+        <button class="act">
+          <div class="act-ico" style="background:#f0fff8">🎁</div>
+          <div class="act-lbl">Transferir</div>
+        </button>
+        <button class="act">
+          <div class="act-ico" style="background:#fff8ed">📊</div>
+          <div class="act-lbl">Extrato</div>
+        </button>
+        <button class="act">
+          <div class="act-ico" style="background:#f0f4ff">❓</div>
+          <div class="act-lbl">Como ganhar</div>
+        </button>
+      </div>
+    </div>
+
+    <!-- how to earn -->
+    <div class="card">
+      <div class="stitle">Como ganhar CRCoins <a>ver tudo</a></div>
+      <div class="earn-grid">
+        <div class="earn-item">
+          <div class="earn-header"><span class="earn-icon">🛒</span><div class="earn-name">Compras na loja</div></div>
+          <div class="earn-desc">Ganhe moedas em cada compra realizada na lojinha.</div>
+          <div class="earn-rate">🟡 5 CRC por item comprado</div>
+        </div>
+        <div class="earn-item">
+          <div class="earn-header"><span class="earn-icon">⭐</span><div class="earn-name">Avaliações</div></div>
+          <div class="earn-desc">Avalie seus produtos comprados com foto ou vídeo.</div>
+          <div class="earn-rate">🟡 50 CRC por avaliação</div>
+        </div>
+        <div class="earn-item">
+          <div class="earn-header"><span class="earn-icon">👯</span><div class="earn-name">Indicar amigas</div></div>
+          <div class="earn-desc">Compartilhe seu código e ganhe quando sua amiga comprar.</div>
+          <div class="earn-rate">🟡 200 CRC por indicação</div>
+        </div>
+        <div class="earn-item">
+          <div class="earn-header"><span class="earn-icon">🎂</span><div class="earn-name">Aniversário</div></div>
+          <div class="earn-desc">Presentes especiais de CRC no mês do seu aniversário!</div>
+          <div class="earn-rate">🟡 500 CRC de presente</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- transactions -->
+    <div class="card">
+      <div class="stitle">Extrato <a>ver completo</a></div>
+      <div class="tx-filters">
+        <button class="tf on" onclick="filterTx(this,'todos')">Todos</button>
+        <button class="tf" onclick="filterTx(this,'ganho')">Ganhos</button>
+        <button class="tf" onclick="filterTx(this,'gasto')">Gastos</button>
+        <button class="tf" onclick="filterTx(this,'pendente')">Pendentes</button>
+      </div>
+      <div class="tx-list" id="txList"></div>
+      <button class="load-more">Carregar mais transações</button>
+    </div>
+
+  </div>
+
+  <!-- ═══ RIGHT ═══ -->
+  <div class="col-r">
+
+    <!-- level -->
+    <div class="card">
+      <div class="stitle" style="margin-bottom:14px">Nível de fidelidade</div>
+      <div class="level-row">
+        <svg width="72" height="72" viewBox="0 0 72 72">
+          <circle cx="36" cy="36" r="30" fill="none" stroke="#f0f0f0" stroke-width="6"/>
+          <circle cx="36" cy="36" r="30" fill="none" stroke="url(#rg)" stroke-width="6"
+            stroke-linecap="round" stroke-dasharray="188.5" stroke-dashoffset="56.5"
+            transform="rotate(-90 36 36)"/>
+          <defs>
+            <linearGradient id="rg" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stop-color="#f5a623"/>
+              <stop offset="100%" stop-color="#ff385c"/>
+            </linearGradient>
+          </defs>
+          <text x="36" y="40" text-anchor="middle" font-size="13" font-weight="700" fill="#222">70%</text>
+        </svg>
+        <div class="level-info">
+          <div class="lname">✨ Nível Ouro</div>
+          <div class="lsub">Faltam 🟡 380 CRC<br/>para o Diamante</div>
+        </div>
+      </div>
+      <div class="prog-track"><div class="prog-fill" style="width:70%"></div></div>
+      <div class="prog-labels"><span>🟡 0</span><span>🟡 1.000</span><span>🟡 2.000</span></div>
+      <div class="lvl-rows">
+        <div class="lvl-row"><span>🥉 Bronze</span><span style="color:#cd7f32;font-weight:600">✓ Completo</span></div>
+        <div class="lvl-row"><span>🥈 Prata</span><span style="color:#aaa;font-weight:600">✓ Completo</span></div>
+        <div class="lvl-row"><span>🥇 Ouro</span><span style="color:#f5a623;font-weight:700">✓ Atual</span></div>
+        <div class="lvl-row"><span>💎 Diamante</span><span>🟡 380 CRC</span></div>
+      </div>
+    </div>
+
+    <!-- referral -->
+    <div class="ref-box">
+      <h4>🎉 Indique e ganhe CRC</h4>
+      <p>Compartilhe seu código com amigas. Quando elas comprarem pela primeira vez, vocês duas ganham CRCoins!</p>
+      <div class="ref-row">
+        <div class="ref-code">KEILA-MS42</div>
+        <button class="ref-copy" onclick="copyRef(this)">Copiar</button>
+      </div>
+      <div class="ref-reward">🟡 200 CRC por indicação confirmada</div>
+    </div>
+
+  </div>
+
+</div>
+
+<!-- modal -->
+<div class="modal-bg" id="modal" onclick="handleOverlay(event)">
+  <div class="modal">
+    <div class="modal-head">
+      <h3>🟡 Seu saldo CRC</h3>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="modal-coin">🟡</div>
+      <div class="modal-amt"><span id="modalAmt">1.240</span><span class="unit">CRC</span></div>
+      <p class="modal-note">Use seus CRCoins para comprar produtos na lojinha.<br/>Cada compra também te rende mais CRC!</p>
+      <button class="btn-full-pri" onclick="closeModal();location.href='lojinha-keila.html'">
+        🛒 Ir para a loja
+      </button>
+      <button class="btn-full-sec" onclick="closeModal()">Agora não</button>
+    </div>
+  </div>
+</div>
+
+<script>
+var TXNS = [
+  {emoji:"🕯️",bg:"#f5f0ff",name:"Vela Aromática Lavanda",sub:"Compra · Pedido #KL48201",date:"Hoje, 14h32",amt:225,type:"spend",status:"ok"},
+  {emoji:"⭐",bg:"#fff8ed",name:"Bônus de compra",sub:"Pedido #KL48201",date:"Hoje, 14h32",amt:25,type:"earn",status:"ok"},
+  {emoji:"⭐",bg:"#fff8ed",name:"Avaliação com foto",sub:"Sabonete Artesanal Rosa",date:"Ontem, 09h15",amt:50,type:"earn",status:"ok"},
+  {emoji:"👯",bg:"#f0fff8",name:"Indicação confirmada",sub:"Ana Souza fez a primeira compra",date:"18 mai",amt:200,type:"earn",status:"ok"},
+  {emoji:"🍯",bg:"#fffaec",name:"Kit Hidratação com Mel",sub:"Compra · Pedido #KL47899",date:"15 mai",amt:445,type:"spend",status:"ok"},
+  {emoji:"🎁",bg:"#fff0f5",name:"Bônus de aniversário",sub:"Presente especial de maio",date:"10 mai",amt:500,type:"earn",status:"ok"},
+  {emoji:"🌿",bg:"#f0fff8",name:"Difusor Bambu & Jasmim",sub:"Compra · Pedido #KL47612",date:"05 mai",amt:325,type:"spend",status:"ok"},
+  {emoji:"⭐",bg:"#fff8ed",name:"Avaliação em vídeo",sub:"Kit Hidratação com Mel",date:"03 mai",amt:50,type:"earn",status:"pend"},
+];
+
+var activeFilter = "todos";
+
+function filterTx(btn, f) {
+  activeFilter = f;
+  document.querySelectorAll(".tf").forEach(function(b){ b.classList.remove("on"); });
+  btn.classList.add("on");
+  renderTx();
+}
+
+function renderTx() {
+  var list = TXNS.filter(function(t) {
+    if (activeFilter === "todos")    return true;
+    if (activeFilter === "ganho")    return t.type === "earn";
+    if (activeFilter === "gasto")    return t.type === "spend";
+    if (activeFilter === "pendente") return t.status === "pend";
+    return true;
+  });
+  var html = "";
+  list.forEach(function(t) {
+    var earn = t.type === "earn";
+    html += '<div class="tx">' +
+      '<div class="tx-ico" style="background:' + t.bg + '">' + t.emoji + '</div>' +
+      '<div class="tx-info">' +
+        '<div class="tx-name">' + t.name + '</div>' +
+        '<div class="tx-sub">' + t.sub + ' · ' + t.date + '</div>' +
+      '</div>' +
+      '<div class="tx-r">' +
+        '<div class="tx-amt ' + (earn ? 'earn' : 'spend') + '">' +
+          '<span>🟡</span>' +
+          (earn ? '+' : '−') + t.amt.toLocaleString("pt-BR") + ' CRC' +
+        '</div>' +
+        '<span class="tx-status ' + (t.status === 'ok' ? 'st-ok' : 'st-pend') + '">' +
+          (t.status === 'ok' ? 'Confirmado' : 'Pendente') +
+        '</span>' +
+      '</div>' +
+    '</div>';
+  });
+  if (!html) html = '<div style="text-align:center;padding:40px 0;color:var(--muted);font-size:14px">Nenhuma transação encontrada</div>';
+  document.getElementById("txList").innerHTML = html;
+}
+
+function openModal() {
+  document.getElementById("modal").classList.add("on");
+  document.body.style.overflow = "hidden";
+}
+function closeModal() {
+  document.getElementById("modal").classList.remove("on");
+  document.body.style.overflow = "";
+}
+function handleOverlay(e) {
+  if (e.target === document.getElementById("modal")) closeModal();
+}
+
+function copyRef(btn) {
+  try { navigator.clipboard.writeText("KEILA-MS42"); } catch(e) {}
+  var orig = btn.textContent;
+  btn.textContent = "Copiado ✓";
+  btn.style.background = "#00a86b";
+  setTimeout(function() { btn.textContent = orig; btn.style.background = ""; }, 2000);
+}
+
+renderTx();
+</script>
 </body>
 </html>
