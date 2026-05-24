@@ -1,23 +1,9 @@
 {
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "framework": null,
+  "buildCommand": null,
+  "installCommand": "",
+  "outputDirectory": ".",
   "cleanUrls": true,
-  "trailingSlash": false,
-
-  "routes": [
-    {
-      "src": "/",
-      "dest": "/index.html"
-    },
-    {
-      "src": "/(.*)",
-      "dest": "/$1"
-    },
-    {
-      "handle": "error"
-    },
-    {
-      "src": "/.*",
-      "status": 404,
-      "dest": "/404.html"
-    }
-  ]
+  "trailingSlash": false
 }
