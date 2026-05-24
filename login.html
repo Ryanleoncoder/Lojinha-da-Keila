@@ -1,14 +1,603 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - Lojinha da Keila</title>
-    <link rel="stylesheet" href="/src/style.css">
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Entrar · keila.shop</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{min-height:100%;height:100%}
+body{font-family:-apple-system,'Helvetica Neue',Helvetica,sans-serif;
+  background:#f7f7f7;color:#222;display:flex;flex-direction:column}
+:root{
+  --p:#ff385c;--ph:#e00b41;
+  --ink:#222;--muted:#6a6a6a;--ms:#929292;
+  --cv:#fff;--soft:#f7f7f7;--hl:#ddd;
+  --crc:#f5a623;--crch:#e8920a;--crc-bg:#fff8ed;
+  --sh:rgba(0,0,0,.02) 0 0 0 1px,rgba(0,0,0,.04) 0 2px 6px,rgba(0,0,0,.08) 0 4px 8px;
+  --sh2:rgba(0,0,0,.04) 0 0 0 1px,rgba(0,0,0,.12) 0 6px 18px,rgba(0,0,0,.12) 0 10px 24px;
+}
+button,input{font-family:inherit}
+
+/* ── TOPBAR ── */
+.topbar{padding:0 40px;height:68px;background:#fff;border-bottom:1px solid var(--hl);
+  display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+.logo{font-size:20px;font-weight:700;color:var(--p)}
+.logo b{color:var(--ink);font-weight:700}
+.topbar-hint{font-size:13px;color:var(--muted)}
+
+/* ── MAIN GRID ── */
+.main{flex:1;display:grid;grid-template-columns:1fr 1fr;min-height:0}
+
+/* left */
+.left{background:linear-gradient(145deg,#fff0f5 0%,#f5f0ff 55%,#f0fff8 100%);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:60px;gap:32px}
+.left-brand .big-logo{font-size:36px;font-weight:800;color:var(--p);text-align:center}
+.left-brand .big-logo b{color:var(--ink);font-weight:800}
+.left-brand p{font-size:15px;color:var(--muted);margin-top:8px;line-height:1.6;text-align:center}
+.tiles{display:flex;flex-wrap:wrap;justify-content:center;gap:14px;max-width:320px}
+.tile{width:80px;height:80px;border-radius:16px;background:#fff;
+  display:flex;align-items:center;justify-content:center;font-size:38px;
+  box-shadow:var(--sh);transition:transform .3s;animation:fi .5s ease both}
+.tile:hover{transform:translateY(-4px)}
+.tile:nth-child(1){animation-delay:.05s}.tile:nth-child(2){animation-delay:.10s}
+.tile:nth-child(3){animation-delay:.15s}.tile:nth-child(4){animation-delay:.20s}
+.tile:nth-child(5){animation-delay:.25s}.tile:nth-child(6){animation-delay:.30s}
+.tile:nth-child(7){animation-delay:.35s}.tile:nth-child(8){animation-delay:.40s}
+@keyframes fi{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+.crc-teaser{display:flex;align-items:center;gap:10px;padding:12px 20px;
+  border-radius:9999px;background:#fff;border:1px solid #f5d9a0;box-shadow:var(--sh)}
+.crc-teaser span{font-size:14px;font-weight:600;color:#b36a00}
+
+/* right */
+.right{display:flex;align-items:center;justify-content:center;
+  padding:60px 40px;background:#fff}
+.form-wrap{width:100%;max-width:380px}
+.form-wrap h1{font-size:26px;font-weight:700;color:var(--ink);margin-bottom:6px;line-height:1.3}
+.form-wrap .subtitle{font-size:15px;color:var(--muted);margin-bottom:32px;line-height:1.6}
+
+/* google */
+.google-btn{width:100%;padding:14px 20px;border-radius:9999px;
+  border:1px solid var(--hl);background:#fff;color:var(--ink);
+  display:flex;align-items:center;justify-content:center;gap:10px;
+  font-size:15px;font-weight:500;box-shadow:var(--sh);cursor:pointer;
+  transition:box-shadow .18s;margin-bottom:14px}
+.google-btn:hover{box-shadow:var(--sh2)}
+.g-icon{width:20px;height:20px;flex-shrink:0}
+
+/* fields */
+.field{margin-bottom:14px}
+.field label{display:block;font-size:13px;font-weight:600;color:var(--ink);margin-bottom:6px}
+.field-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+.field-row label{margin-bottom:0}
+.field-row a{font-size:12px;color:var(--p);cursor:pointer;font-weight:500}
+.field-row a:hover{text-decoration:underline}
+.field input{width:100%;padding:13px 16px;border-radius:12px;
+  border:1px solid var(--hl);font-size:14px;color:var(--ink);
+  outline:none;transition:border-color .18s,box-shadow .18s;background:#fff}
+.field input:focus{border-color:var(--p);box-shadow:0 0 0 3px rgba(255,56,92,.12)}
+.field input::placeholder{color:var(--ms)}
+.field input.err-field{border-color:#e74c3c;box-shadow:0 0 0 3px rgba(231,76,60,.1)}
+.err-msg{font-size:12px;color:#c0392b;margin-top:5px;display:none}
+.err-msg.show{display:block}
+.help-msg{font-size:12px;color:var(--muted);margin-top:5px}
+
+/* code inputs */
+.code-row{display:flex;gap:10px;justify-content:center;margin-bottom:6px}
+.code-box{width:52px;height:58px;border-radius:12px;border:1.5px solid var(--hl);
+  font-size:24px;font-weight:700;color:var(--ink);text-align:center;
+  outline:none;background:#fff;transition:border-color .18s,box-shadow .18s}
+.code-box:focus{border-color:var(--p);box-shadow:0 0 0 3px rgba(255,56,92,.12)}
+.code-box.filled{border-color:var(--crc);background:var(--crc-bg)}
+
+/* password strength */
+.strength-bar{height:4px;border-radius:9999px;background:var(--soft);
+  overflow:hidden;margin:8px 0 4px}
+.strength-fill{height:100%;border-radius:9999px;width:0;transition:width .3s,background .3s}
+.strength-label{font-size:11px;color:var(--muted)}
+
+/* buttons */
+.submit-btn{width:100%;padding:15px;border-radius:9999px;border:none;
+  background:var(--p);color:#fff;font-size:16px;font-weight:600;
+  cursor:pointer;transition:all .18s;margin-top:4px;
+  display:flex;align-items:center;justify-content:center;gap:8px}
+.submit-btn:hover{background:var(--ph);box-shadow:rgba(255,56,92,.3) 0 6px 20px}
+.submit-btn:active{transform:scale(.98)}
+.submit-btn:disabled{opacity:.55;pointer-events:none}
+.back-btn{width:100%;padding:12px;border-radius:9999px;border:1px solid var(--hl);
+  background:transparent;color:var(--muted);font-size:14px;font-weight:500;
+  cursor:pointer;margin-top:10px;transition:all .15s}
+.back-btn:hover{color:var(--ink);background:var(--soft)}
+
+/* divider */
+.divider{display:flex;align-items:center;gap:12px;margin:22px 0}
+.dline{flex:1;height:1px;background:var(--hl)}
+.divider span{font-size:13px;color:var(--muted);white-space:nowrap}
+
+/* first access link */
+.first-access-btn{width:100%;padding:14px 20px;border-radius:9999px;
+  border:1.5px dashed var(--hl);background:transparent;color:var(--muted);
+  font-size:15px;font-weight:500;cursor:pointer;transition:all .18s;margin-top:14px;
+  display:flex;align-items:center;justify-content:center;gap:10px}
+.first-access-btn:hover{border-color:var(--crc);color:#b36a00;background:var(--crc-bg)}
+
+/* step indicator */
+.steps{display:flex;align-items:center;gap:0;margin-bottom:28px}
+.step-dot{width:28px;height:28px;border-radius:50%;border:2px solid var(--hl);
+  background:#fff;display:flex;align-items:center;justify-content:center;
+  font-size:12px;font-weight:700;color:var(--muted);flex-shrink:0;transition:all .25s}
+.step-dot.done{background:var(--crc);border-color:var(--crc);color:#fff}
+.step-dot.active{background:var(--p);border-color:var(--p);color:#fff}
+.step-line{flex:1;height:2px;background:var(--hl);transition:background .25s}
+.step-line.done{background:var(--crc)}
+
+/* blocked notice */
+.blocked-box{background:#fff0f1;border:1px solid #f5c6c8;border-radius:12px;
+  padding:16px;text-align:center;margin-top:8px}
+.blocked-box .bi{font-size:32px;margin-bottom:8px}
+.blocked-box p{font-size:13px;color:#c0392b;line-height:1.6}
+
+/* resend */
+.resend-row{text-align:center;margin-top:12px;font-size:13px;color:var(--muted)}
+.resend-row a{color:var(--p);cursor:pointer;font-weight:500}
+.resend-row a:hover{text-decoration:underline}
+.resend-row a.disabled{color:var(--ms);pointer-events:none}
+
+/* success state */
+.success-wrap{text-align:center;padding:10px 0}
+.success-icon{font-size:60px;margin-bottom:16px;
+  animation:pop .4s cubic-bezier(.4,0,.2,1)}
+@keyframes pop{from{transform:scale(.5);opacity:0}to{transform:scale(1);opacity:1}}
+
+/* tos */
+.tos{font-size:12px;color:var(--ms);text-align:center;margin-top:20px;line-height:1.7}
+.tos a{color:var(--p);cursor:pointer}
+.tos a:hover{text-decoration:underline}
+
+/* ── FOOTER ── */
+footer{flex-shrink:0;background:#fff;border-top:1px solid var(--hl);
+  padding:18px 40px;display:flex;align-items:center;
+  justify-content:space-between;flex-wrap:wrap;gap:12px}
+.footer-logo{font-size:15px;font-weight:700;color:var(--p)}
+.footer-logo b{color:var(--ink);font-weight:700}
+.footer-links{display:flex;gap:20px;flex-wrap:wrap}
+.footer-links a{font-size:13px;color:var(--muted);cursor:pointer;transition:color .15s}
+.footer-links a:hover{color:var(--ink)}
+.footer-crc{display:flex;align-items:center;gap:6px;font-size:13px;color:#b36a00;font-weight:600}
+
+/* ── TOAST ── */
+.toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(80px);
+  background:var(--ink);color:#fff;padding:12px 22px;border-radius:9999px;
+  font-size:14px;font-weight:500;box-shadow:0 8px 24px rgba(0,0,0,.2);
+  transition:transform .35s cubic-bezier(.4,0,.2,1);
+  pointer-events:none;white-space:nowrap;z-index:999}
+.toast.show{transform:translateX(-50%) translateY(0)}
+
+@media(max-width:720px){
+  .main{grid-template-columns:1fr}
+  .left{display:none}
+  .right{padding:36px 24px}
+  .topbar{padding:0 20px}
+  footer{padding:16px 20px}
+  .footer-links{gap:12px}
+}
+</style>
 </head>
 <body>
-    <div id="login-container"></div>
-    <script src="/src/js/supabase.js"></script>
-    <script src="/src/js/auth.js"></script>
+
+<div class="topbar">
+  <div class="logo">keila<b>.shop</b></div>
+  <span class="topbar-hint">Produtos artesanais feitos com ♥</span>
+</div>
+
+<div class="main">
+
+  <!-- LEFT -->
+  <div class="left">
+    <div class="left-brand">
+      <div class="big-logo">keila<b>.shop</b></div>
+      <p>Produtos artesanais exclusivos,<br/>pagos com CRCoins.</p>
+    </div>
+    <div class="tiles">
+      <div class="tile">🕯️</div><div class="tile">🌸</div>
+      <div class="tile">🍯</div><div class="tile">🌿</div>
+      <div class="tile">✨</div><div class="tile">🍫</div>
+      <div class="tile">💐</div><div class="tile">🌱</div>
+    </div>
+    <div class="crc-teaser">
+      <span style="font-size:20px">🟡</span>
+      <span>Novo por aqui? Ganhe 200 CRC de boas-vindas!</span>
+    </div>
+  </div>
+
+  <!-- RIGHT -->
+  <div class="right">
+    <div class="form-wrap">
+
+      <!-- ══ LOGIN VIEW ══ -->
+      <div id="viewLogin">
+        <h1>Bem-vinda de volta 👋</h1>
+        <p class="subtitle">Entre na sua conta para acessar seus CRCoins e seus produtos favoritos.</p>
+
+        <button class="google-btn" onclick="handleGoogle()">
+          <svg class="g-icon" viewBox="0 0 48 48">
+            <path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3C33.6 32.9 29.3 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.1 7.9 3l5.7-5.7C34 6.5 29.3 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.2-.1-2.3-.4-3.5z"/>
+            <path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.7 16.1 19 13 24 13c3.1 0 5.8 1.1 7.9 3l5.7-5.7C34 6.5 29.3 4 24 4 16.3 4 9.7 8.4 6.3 14.7z"/>
+            <path fill="#4CAF50" d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2C29.3 35.3 26.8 36 24 36c-5.3 0-9.7-3.1-11.3-7.5L6 33.8C9.4 39.6 16.2 44 24 44z"/>
+            <path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.3-2.4 4.2-4.4 5.5l6.2 5.2C41 35.1 44 30 44 24c0-1.2-.1-2.3-.4-3.5z"/>
+          </svg>
+          Fazer login com Google
+        </button>
+
+        <div class="field">
+          <label>E-mail</label>
+          <input type="email" id="loginEmail" placeholder="seu@email.com"
+            onkeydown="if(event.key==='Enter')handleLogin()"/>
+          <div class="err-msg" id="loginEmailErr">Insira um e-mail válido.</div>
+        </div>
+        <div class="field">
+          <div class="field-row">
+            <label>Senha</label>
+            <a onclick="handleForgot()">Esqueci minha senha</a>
+          </div>
+          <input type="password" id="loginPass" placeholder="••••••••"
+            onkeydown="if(event.key==='Enter')handleLogin()"/>
+          <div class="err-msg" id="loginPassErr">Senha precisa ter ao menos 6 caracteres.</div>
+        </div>
+
+        <button class="submit-btn" id="loginBtn" onclick="handleLogin()">
+          Fazer login com e-mail
+        </button>
+
+        <div class="divider">
+          <div class="dline"></div><span>ou</span><div class="dline"></div>
+        </div>
+
+        <button class="first-access-btn" onclick="goFirstAccess()">
+          <span style="font-size:18px">🟡</span>
+          Meu primeiro acesso
+        </button>
+
+        <p class="tos">Ao entrar você concorda com os <a>Termos de Uso</a> e a <a>Política de Privacidade</a>.</p>
+      </div>
+
+      <!-- ══ FIRST ACCESS VIEW ══ -->
+      <div id="viewFirstAccess" style="display:none">
+
+        <!-- step indicator -->
+        <div class="steps" id="stepIndicator">
+          <div class="step-dot active" id="sd1">1</div>
+          <div class="step-line" id="sl1"></div>
+          <div class="step-dot" id="sd2">2</div>
+          <div class="step-line" id="sl2"></div>
+          <div class="step-dot" id="sd3">3</div>
+        </div>
+
+        <!-- STEP 1 — email -->
+        <div id="step1">
+          <h1>Meu primeiro acesso</h1>
+          <p class="subtitle">Digite o e-mail cadastrado na lista de acesso da lojinha.</p>
+
+          <div class="field">
+            <label>E-mail</label>
+            <input type="email" id="fa_email" placeholder="seu@email.com"
+              onkeydown="if(event.key==='Enter')submitStep1()"/>
+            <div class="err-msg" id="fa_emailErr"></div>
+          </div>
+
+          <div id="blockedBox" class="blocked-box" style="display:none">
+            <div class="bi">🚫</div>
+            <p>Este e-mail não está na lista de acesso.<br/>Entre em contato com a Keila para solicitar acesso.</p>
+          </div>
+
+          <button class="submit-btn" id="step1Btn" onclick="submitStep1()" style="margin-top:14px">
+            Verificar e-mail →
+          </button>
+          <button class="back-btn" onclick="backToLogin()">← Voltar para o login</button>
+        </div>
+
+        <!-- STEP 2 — code -->
+        <div id="step2" style="display:none">
+          <h1>Código de verificação</h1>
+          <p class="subtitle">Enviamos um código de 6 dígitos para <strong id="sentToEmail"></strong>. Verifique sua caixa de entrada.</p>
+
+          <div class="code-row">
+            <input class="code-box" id="c0" maxlength="1" type="text" inputmode="numeric"
+              onkeyup="codeNav(0,event)" oninput="codeFill(0)"/>
+            <input class="code-box" id="c1" maxlength="1" type="text" inputmode="numeric"
+              onkeyup="codeNav(1,event)" oninput="codeFill(1)"/>
+            <input class="code-box" id="c2" maxlength="1" type="text" inputmode="numeric"
+              onkeyup="codeNav(2,event)" oninput="codeFill(2)"/>
+            <input class="code-box" id="c3" maxlength="1" type="text" inputmode="numeric"
+              onkeyup="codeNav(3,event)" oninput="codeFill(3)"/>
+            <input class="code-box" id="c4" maxlength="1" type="text" inputmode="numeric"
+              onkeyup="codeNav(4,event)" oninput="codeFill(4)"/>
+            <input class="code-box" id="c5" maxlength="1" type="text" inputmode="numeric"
+              onkeyup="codeNav(5,event)" oninput="codeFill(5)"/>
+          </div>
+          <div class="err-msg" id="codeErr" style="text-align:center"></div>
+
+          <button class="submit-btn" id="step2Btn" onclick="submitStep2()" style="margin-top:16px">
+            Confirmar código →
+          </button>
+
+          <div class="resend-row">
+            Não recebeu? <a id="resendLink" onclick="resendCode()">Reenviar código</a>
+            <span id="resendTimer" style="display:none"> (<span id="timerVal">30</span>s)</span>
+          </div>
+          <button class="back-btn" onclick="goStep(1)">← Voltar</button>
+        </div>
+
+        <!-- STEP 3 — create password -->
+        <div id="step3" style="display:none">
+          <h1>Criar senha 🔐</h1>
+          <p class="subtitle">Escolha uma senha segura para proteger sua conta.</p>
+
+          <div class="field">
+            <label>Nova senha</label>
+            <input type="password" id="fa_pass1" placeholder="Mínimo 8 caracteres"
+              oninput="checkStrength()" onkeydown="if(event.key==='Enter')submitStep3()"/>
+            <div class="strength-bar"><div class="strength-fill" id="strengthFill"></div></div>
+            <div class="strength-label" id="strengthLabel"></div>
+          </div>
+          <div class="field">
+            <label>Confirmar senha</label>
+            <input type="password" id="fa_pass2" placeholder="Repita a senha"
+              oninput="checkMatch()" onkeydown="if(event.key==='Enter')submitStep3()"/>
+            <div class="err-msg" id="passMatchErr">As senhas não coincidem.</div>
+          </div>
+
+          <button class="submit-btn" id="step3Btn" onclick="submitStep3()" style="margin-top:8px">
+            Criar conta e entrar 🟡
+          </button>
+          <button class="back-btn" onclick="goStep(2)">← Voltar</button>
+        </div>
+
+      </div><!-- /viewFirstAccess -->
+
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  <div class="footer-logo">keila<b>.shop</b></div>
+  <div class="footer-links">
+    <a>Sobre a lojinha</a>
+    <a>Termos de Uso</a>
+    <a>Privacidade</a>
+    <a>Contato</a>
+    <a>Como ganhar CRC</a>
+  </div>
+  <div class="footer-crc"><span style="font-size:16px">🟡</span> Powered by CRCoins</div>
+</footer>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ── whitelist (mock) ─────────────────────────────────── */
+var WHITELIST = [
+  "keila@keila.shop",
+  "maria@teste.com",
+  "admin@keila.shop",
+  "usuario@teste.com"
+];
+
+/* the real code would be sent by the backend — here we fake it */
+var MOCK_CODE  = "483920";
+var userEmail  = "";
+var timerInt   = null;
+
+/* ── toast ─────────────────────────────────────────────── */
+function showToast(msg, ms) {
+  var t = document.getElementById("toast");
+  t.textContent = msg;
+  t.classList.add("show");
+  setTimeout(function(){ t.classList.remove("show"); }, ms || 2600);
+}
+
+/* ── navigate ───────────────────────────────────────────── */
+function goFirstAccess() {
+  document.getElementById("viewLogin").style.display = "none";
+  document.getElementById("viewFirstAccess").style.display = "block";
+  goStep(1);
+}
+function backToLogin() {
+  document.getElementById("viewFirstAccess").style.display = "none";
+  document.getElementById("viewLogin").style.display = "block";
+}
+
+/* ── step indicator ─────────────────────────────────────── */
+function goStep(n) {
+  [1,2,3].forEach(function(i){
+    document.getElementById("step"+i).style.display = (i===n ? "block" : "none");
+    var dot  = document.getElementById("sd"+i);
+    dot.className = "step-dot" + (i<n ? " done" : i===n ? " active" : "");
+    if (i < 3) {
+      document.getElementById("sl"+i).className = "step-line" + (i<n ? " done" : "");
+    }
+  });
+}
+
+/* ── STEP 1 ─────────────────────────────────────────────── */
+function submitStep1() {
+  var email = document.getElementById("fa_email").value.trim().toLowerCase();
+  var err   = document.getElementById("fa_emailErr");
+  var blk   = document.getElementById("blockedBox");
+  err.classList.remove("show");
+  blk.style.display = "none";
+  document.getElementById("fa_email").classList.remove("err-field");
+
+  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    err.textContent = "Insira um e-mail válido.";
+    err.classList.add("show");
+    document.getElementById("fa_email").classList.add("err-field");
+    return;
+  }
+
+  var btn = document.getElementById("step1Btn");
+  btn.disabled = true; btn.textContent = "Verificando…";
+
+  setTimeout(function() {
+    btn.disabled = false; btn.textContent = "Verificar e-mail →";
+    var allowed = WHITELIST.indexOf(email) >= 0;
+    if (!allowed) {
+      blk.style.display = "block";
+      return;
+    }
+    userEmail = email;
+    document.getElementById("sentToEmail").textContent = email;
+    showToast("📧 Código enviado para " + email);
+    goStep(2);
+    startResendTimer();
+  }, 900);
+}
+
+/* ── STEP 2 — code ─────────────────────────────────────── */
+function codeNav(i, e) {
+  var val = document.getElementById("c"+i).value;
+  if (e.key === "Backspace" && !val && i > 0) {
+    document.getElementById("c"+(i-1)).focus();
+  } else if (val && i < 5) {
+    document.getElementById("c"+(i+1)).focus();
+  }
+  /* auto-submit when last box filled */
+  if (i === 5 && val) {
+    var full = getCode();
+    if (full.length === 6) submitStep2();
+  }
+}
+function codeFill(i) {
+  var box = document.getElementById("c"+i);
+  /* allow only digits */
+  box.value = box.value.replace(/\D/g,"").slice(0,1);
+  box.classList.toggle("filled", box.value !== "");
+}
+function getCode() {
+  var s = "";
+  for (var i=0;i<6;i++) s += document.getElementById("c"+i).value;
+  return s;
+}
+function clearCodeBoxes() {
+  for (var i=0;i<6;i++){
+    var b = document.getElementById("c"+i);
+    b.value=""; b.classList.remove("filled");
+  }
+  document.getElementById("c0").focus();
+}
+
+function submitStep2() {
+  var code = getCode();
+  var err  = document.getElementById("codeErr");
+  err.classList.remove("show");
+  if (code.length < 6) {
+    err.textContent = "Digite os 6 dígitos do código."; err.classList.add("show"); return;
+  }
+  var btn = document.getElementById("step2Btn");
+  btn.disabled = true; btn.textContent = "Verificando…";
+  setTimeout(function(){
+    btn.disabled = false; btn.textContent = "Confirmar código →";
+    if (code !== MOCK_CODE) {
+      err.textContent = "Código incorreto. Verifique e tente novamente.";
+      err.classList.add("show");
+      clearCodeBoxes(); return;
+    }
+    clearInterval(timerInt);
+    goStep(3);
+  }, 800);
+}
+
+function resendCode() {
+  showToast("📧 Novo código enviado para " + userEmail);
+  clearCodeBoxes();
+  startResendTimer();
+}
+
+function startResendTimer() {
+  var link  = document.getElementById("resendLink");
+  var timer = document.getElementById("resendTimer");
+  var val   = document.getElementById("timerVal");
+  var secs  = 30;
+  link.classList.add("disabled");
+  timer.style.display = "inline";
+  val.textContent = secs;
+  clearInterval(timerInt);
+  timerInt = setInterval(function(){
+    secs--;
+    val.textContent = secs;
+    if (secs <= 0) {
+      clearInterval(timerInt);
+      link.classList.remove("disabled");
+      timer.style.display = "none";
+    }
+  }, 1000);
+}
+
+/* ── STEP 3 — password ─────────────────────────────────── */
+function checkStrength() {
+  var p    = document.getElementById("fa_pass1").value;
+  var fill = document.getElementById("strengthFill");
+  var lbl  = document.getElementById("strengthLabel");
+  var score = 0;
+  if (p.length >= 8)              score++;
+  if (/[A-Z]/.test(p))           score++;
+  if (/[0-9]/.test(p))           score++;
+  if (/[^A-Za-z0-9]/.test(p))   score++;
+  var colors = ["","#e74c3c","#e67e22","#f5a623","#27ae60"];
+  var labels = ["","Fraca","Média","Boa","Forte 💪"];
+  var pct    = [0,25,50,75,100];
+  fill.style.width = pct[score] + "%";
+  fill.style.background = colors[score] || "";
+  lbl.textContent = score > 0 ? labels[score] : "";
+}
+function checkMatch() {
+  var p1 = document.getElementById("fa_pass1").value;
+  var p2 = document.getElementById("fa_pass2").value;
+  var err = document.getElementById("passMatchErr");
+  if (p2 && p1 !== p2) err.classList.add("show");
+  else err.classList.remove("show");
+}
+
+function submitStep3() {
+  var p1  = document.getElementById("fa_pass1").value;
+  var p2  = document.getElementById("fa_pass2").value;
+  var err = document.getElementById("passMatchErr");
+  if (p1.length < 8) {
+    showToast("A senha precisa ter ao menos 8 caracteres."); return;
+  }
+  if (p1 !== p2) { err.classList.add("show"); return; }
+
+  var btn = document.getElementById("step3Btn");
+  btn.disabled = true; btn.textContent = "Criando conta…";
+  setTimeout(function(){
+    showToast("🟡 Conta criada! Você ganhou 200 CRC de boas-vindas!", 3000);
+    setTimeout(function(){ window.location.href = "lojinha-keila.html"; }, 3200);
+  }, 1200);
+}
+
+/* ── LOGIN ──────────────────────────────────────────────── */
+function handleLogin() {
+  var email = document.getElementById("loginEmail").value.trim();
+  var pass  = document.getElementById("loginPass").value;
+  var eErr  = document.getElementById("loginEmailErr");
+  var pErr  = document.getElementById("loginPassErr");
+  eErr.classList.remove("show"); pErr.classList.remove("show");
+  var ok = true;
+  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){ eErr.classList.add("show"); ok=false; }
+  if (!pass || pass.length < 6){ pErr.classList.add("show"); ok=false; }
+  if (!ok) return;
+  var btn = document.getElementById("loginBtn");
+  btn.disabled=true; btn.textContent="Entrando…";
+  setTimeout(function(){ window.location.href="lojinha-keila.html"; },1200);
+}
+function handleGoogle() {
+  showToast("Redirecionando para o Google…");
+  setTimeout(function(){ window.location.href="lojinha-keila.html"; },1400);
+}
+function handleForgot() {
+  showToast("Link de recuperação enviado para o seu e-mail 📧",3000);
+}
+</script>
 </body>
 </html>
