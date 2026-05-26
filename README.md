@@ -18,4 +18,4 @@ A **Lojinha da Keila** é uma plataforma de marketplace interno que permite aos 
 - 🔐 **Autenticação Segura** - Login com validação de email
 - 📱 **Interface Responsiva** - Acesso via web e mobile
 
-**Última atualização:** 21 de maio de 2026
+**Última atualização:** 26 de maio de 2026
